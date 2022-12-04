@@ -4,7 +4,33 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3793ef06-4a51-423a-957a-dbf71de11012" name="变更" comment="" />
+    <list default="true" id="3793ef06-4a51-423a-957a-dbf71de11012" name="变更" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/lib.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/client.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/script/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/script/src/main/shell/awkprof.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/script/src/main/shell/select.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/server.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/target/classes/server.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/dblp.dtd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/main/java/XmlPartition$_run_closure1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/main/java/XmlPartition$_run_closure2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/main/java/XmlPartition.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/XmlPartition.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/script/src/main/java/XmlPartition.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dblp.dtd" beforeDir="false" afterPath="$PROJECT_DIR$/script/src/main/java/dblp.dtd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Demo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/GroTest$_run_closure1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/GroTest$_run_closure2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/GroTest.class" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,17 +44,12 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="GroovyConsoleState">
-    <option name="list">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
       <list>
-        <Entry>
-          <option name="moduleName" value="XmlPartition" />
-          <option name="url" value="file://$APPLICATION_CONFIG_DIR$/consoles/groovy/groovy_console.groovy" />
-        </Entry>
+        <option value="Pikachudy" />
       </list>
     </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -41,18 +62,22 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Downloaded.Files.Path.Enabled": "false",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
     "jdk.selected.JAVA_MODULE": "18",
-    "last_opened_file_path": "D:/homework/Distribution/XmlPartition",
+    "last_opened_file_path": "/home/ubuntu/Distribution/DistributedQuery/server/src/main/java",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "库",
+    "project.structure.last.edited": "SDK",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "settings.editor.selected.configurable": "project.propCompiler"
@@ -60,8 +85,58 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="D:\homework\Distribution\XmlPartition" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/server/src/main/java" />
+      <recent name="$PROJECT_DIR$/server" />
+      <recent name="$PROJECT_DIR$/script" />
+      <recent name="$PROJECT_DIR$/Script" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Shell Script.select.sh">
+    <configuration name="server (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="server" />
+      <module name="server" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="server" type="Application" factoryName="Application" singleton="false" temporary="true">
+      <option name="MAIN_CLASS_NAME" value="server" />
+      <module name="server" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="select.sh" type="ShConfigurationType" temporary="true">
+      <option name="SCRIPT_TEXT" value="" />
+      <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
+      <option name="SCRIPT_PATH" value="$PROJECT_DIR$/src/main/shell/select.sh" />
+      <option name="SCRIPT_OPTIONS" value="" />
+      <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
+      <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$/src/main/shell" />
+      <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
+      <option name="INTERPRETER_PATH" value="/bin/bash" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="EXECUTE_IN_TERMINAL" value="true" />
+      <option name="EXECUTE_SCRIPT_FILE" value="true" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Shell Script.select.sh" />
+      <item itemvalue="应用程序.server (1)" />
+      <item itemvalue="应用程序.server" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="应用程序.server" />
+        <item itemvalue="应用程序.server (1)" />
+        <item itemvalue="Shell Script.select.sh" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -77,6 +152,13 @@
       <workItem from="1669291172100" duration="4206000" />
       <workItem from="1669295815070" duration="35000" />
       <workItem from="1669341726799" duration="875000" />
+      <workItem from="1669883321045" duration="912000" />
+      <workItem from="1669893246139" duration="1215000" />
+      <workItem from="1669894473162" duration="100000" />
+      <workItem from="1669901697948" duration="1058000" />
+      <workItem from="1669902918128" duration="31000" />
+      <workItem from="1669902958025" duration="962000" />
+      <workItem from="1669947714255" duration="7022000" />
     </task>
     <servers />
   </component>
@@ -94,11 +176,15 @@
       </map>
     </option>
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="初步完成linux查询脚本（时间待优化），初步建立client端读取console命令。下一步：需要使用多线程进行socket查询" />
+    <option name="LAST_COMMIT_MESSAGE" value="初步完成linux查询脚本（时间待优化），初步建立client端读取console命令。下一步：需要使用多线程进行socket查询" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/XmlPartition.groovy</url>
+          <url>file://$PROJECT_DIR$/Script/src/main/java/XmlPartition.groovy</url>
           <line>48</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>

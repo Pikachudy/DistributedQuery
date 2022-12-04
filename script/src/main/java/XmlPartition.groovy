@@ -1,3 +1,5 @@
+
+
 import javax.xml.stream.*
 pieces = 6 // 切分块数
 input = "D:\\homework\\Distribution\\dblp\\dblp.xml" // xml源文件路径
