@@ -40,6 +40,7 @@ public class client {
      * @return socket数组
      * @throws IOException
      */
+
     private Socket[] establishConnection(int server_num) throws IOException {
         Socket [] sockets = new Socket[server_num];
         for(int i=0;i<server_num;++i){
@@ -112,7 +113,7 @@ public class client {
         return true;
     }
     public static void main(String[] args) throws IOException {
-        client c = createClient(1,1100);
+        client c = createClient(2,1100);
         // 建立socket连接
         while (true){
             List<String> arg_list = c.readConsole();
