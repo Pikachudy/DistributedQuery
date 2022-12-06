@@ -1,3 +1,5 @@
+import lombok.Data;
+
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -6,15 +8,17 @@ import java.util.List;
 
 /**
  * Client端
- * @author: Piakchudy
+ * @author: Pikachudy
  * @date: 2022/12/4
  */
 public class client {
     private final int server_num;
+    private final int block_num;
     private final Socket[] sockets;
     private final int start_port;
     private client(int server_num, int start_port){
         this.server_num = server_num;
+        this.block_num = server_num;
         this.start_port = start_port;
         try {
             this.sockets = this.establishConnection(this.server_num);
@@ -81,9 +85,7 @@ public class client {
         System.out.println("请输入起止年份（若不限则输入'-'):");
         s=console.readLine();
         List<String> years = new ArrayList<>(List.of(s.split(" ")));
-        for(String year : years){
-            list.add(year);
-        }
+        list.addAll(years);
         return list;
     }
 
@@ -93,37 +95,169 @@ public class client {
      * @return 序列化后的字符串，以'|'分割
      */
     private String list2String(List<String> arg_list){
-        String arg="";
+        StringBuilder arg= new StringBuilder();
         for(int i = 0; i<arg_list.size();++i){
-            arg+= arg_list.get(i);
+            arg.append(arg_list.get(i));
             if(i!=arg_list.size()-1){
-                arg+="|";
+                arg.append("|");
             }
         }
-        return arg;
+        return arg.toString();
     }
-    private boolean sendRequest(List<String> arg_list) throws IOException {
-        // 发送请求 ----- 采用多线程？此部分函数待定
+
+    /**
+     * 处理查询
+     * @param arg_list 查询参数列表
+     * @return 是否成功
+     */
+    private boolean dealRequest(List<String> arg_list){
+        RequestCounter counter = new RequestCounter(this.block_num);
+        counter.resetCount();
+        // 发送请求 ----- 采用多线程
         String args = this.list2String(arg_list);
-        for(Socket socket : this.sockets){
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            writer.write(args);
-            writer.flush();
+        Thread[] thread_list = new Thread[this.server_num];
+        for(int i = 0; i< this.server_num;++i){
+            thread_list[i] = new Thread(new CommunicationManager(args,counter,sockets,i));
+            thread_list[i].start();
         }
+        int i=0;
+        while (counter.getCount()>0){
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        // 若运行到此处，则ok了（吧?
+        System.out.println("--------------------------------------");
+        System.out.println("查询结果为:"+counter.getResult());
         return true;
     }
     public static void main(String[] args) throws IOException {
-        client c = createClient(2,1100);
-        // 建立socket连接
+        client c = createClient(6,1100);
+
         while (true){
             List<String> arg_list = c.readConsole();
             if(arg_list == null) {
                 break;
             }
             else{
-                c.sendRequest(arg_list);
+                c.dealRequest(arg_list);
             }
         }
 
     }
 }
+
+/**
+ * 客户端-服务端通信管理器——便于多线程
+ * @author: Pikachudy
+ * @date: 2022/12/6
+ */
+@Data
+class CommunicationManager implements Runnable{
+    private final RequestCounter counter;
+    private Socket[] sockets;
+    private int server_label;
+    private Socket socket;
+    private String request_msg;
+    @Override
+    public void run() {
+        try {
+            this.sendMessage(this.request_msg);
+            System.out.println("等待"+this.server_label+"服务端回应……");
+            String result= this.waitingForRes();
+
+            // 若能运行到此处说明未发生异常
+            System.out.println(this.server_label+"返回结果为:"+result);
+            // 修改counter
+            synchronized (this.counter){
+                this.counter.addResult(Integer.parseInt(result));
+                this.counter.countDown();
+            }
+        } catch (IOException e) {
+            // 发生异常
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     *
+     * @param counter 计数器
+     * @param sockets socket表——便于遇到异常时处理
+     * @param serverLabel 当前尝试通信的的server号
+     */
+    CommunicationManager(String requestMsg,RequestCounter counter,Socket[] sockets,int serverLabel){
+        this.request_msg = requestMsg;
+        this.counter = counter;
+        this.sockets = sockets;
+        this.server_label = serverLabel;
+        this.socket = this.sockets[this.server_label];
+    }
+
+    /**
+     * 发送信息至server
+     * 若连接断开则抛出异常
+     * @param msg 发送信息
+     * @throws IOException socket连接断开
+     */
+    void sendMessage(String msg) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        writer.write(msg+'\n');
+        writer.flush();
+    }
+
+    /**
+     * 等待接收消息
+     * 若连接断开则抛出异常
+     * @return 接收到的查询结果
+     * @throws IOException socket连接断开
+     */
+    String waitingForRes() throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        return reader.readLine();
+    }
+
+
+
+}
+
+/**
+ * 请求计数器
+ * @author: Pikachudy
+ * @date: 2022/12/6
+ */
+@Data
+class RequestCounter{
+    private int count;
+    private int request_num;
+    private int result;
+    RequestCounter(int request_num){
+        this.request_num = request_num;
+        this.result=0;
+    }
+
+    /**
+     * 将计数器设定为 request_num
+     */
+    public void resetCount(){
+        this.count = this.request_num;
+    }
+
+    /**
+     * 计数减 1
+     */
+    public void countDown(){
+            this.count--;
+    }
+
+    /**
+     * 增加结果
+     * @param result
+     */
+    public void addResult(int result){
+        this.result+=result;
+    }
+
+}
+

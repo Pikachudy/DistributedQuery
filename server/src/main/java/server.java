@@ -16,15 +16,16 @@ public class server {
     private final String shell_dir;
     private final String shell_name;
     private final String xml_dir;
-    private final int server_num;
+    private final int server_label;
     private final int port;
     private Socket accept;
-    server(int serverNumber){
-        server_num= serverNumber;
-        port=serverNumber+1100;
+    server(int serverLabel){
+        server_label= serverLabel;
+        port=serverLabel+1100;
         shell_dir = "/home/ubuntu/Distribution/DistributedQuery/script/src/main/shell";
         shell_name= "select.sh";
-        xml_dir = "/home/ubuntu/Distribution/xmlBlocks/";
+        // 监听块名称
+        xml_dir = "/home/ubuntu/Distribution/ServerFile0"+server_label+"/output_000"+server_label+".xml";
     }
     /**
      * 监听相应端口，若端口被占用则抛出异常并输出
@@ -33,7 +34,7 @@ public class server {
     public boolean startListen(){
         try{
             ServerSocket serverSocket = new ServerSocket(this.port);
-            System.out.println(this.server_num+"号服务正在监听"+this.port+"端口……");
+            System.out.println(this.server_label+"号服务正在监听"+this.port+"端口……");
             this.accept = serverSocket.accept();
             System.out.println(port+"端口"+"已建立连接！");
             return true;
@@ -76,7 +77,7 @@ public class server {
         List<String> command = new ArrayList<>();
         command.add("./" + shellName);
         command.addAll(args);
-
+        command.add(this.xml_dir);
         System.out.println(command);
         ProcessBuilder pb = new ProcessBuilder(command);
         pb.directory(new File(shellDir));
@@ -116,10 +117,10 @@ public class server {
 //        shell_args[3] = server.xml_dir+"output_0002.xml";
 //
 //        System.out.println(server.callShell(server.shell_dir,server.shell_name,shell_args));
-        final int SERVER_NUM = 2;
+        final int SERVER_NUM = 6;
         Thread[] thread_list = new Thread[SERVER_NUM];
         for(int i=0;i<SERVER_NUM;++i){
-            thread_list[i] = new Thread(new ServerRunner(i));
+            thread_list[i] = new Thread(new ServerRunner(new server(i),i));
             thread_list[i].start();
         }
 
