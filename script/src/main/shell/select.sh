@@ -9,7 +9,7 @@ path=$4
 if [ "$r_year" == "" ] # 仅搜索名字 * < year < *
 then
   path=$2
-  awk '/'"$name"'/' $path | wc -l
+  grep -o "$name" $path | wc -l
 elif [ "$path" == "" ] # 搜索固定年份 year == 2012
 then
   path=$3

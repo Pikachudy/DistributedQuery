@@ -25,7 +25,7 @@ public class server {
         shell_dir = "/home/ubuntu/Distribution/DistributedQuery/script/src/main/shell";
         shell_name= "select.sh";
         // 监听块名称
-        xml_dir = "/home/ubuntu/Distribution/ServerFile0"+server_label+"/output_000"+server_label+".xml";
+        xml_dir = "/home/ubuntu/Distribution/ServerFile0"+server_label+"/output_000";
     }
     /**
      * 监听相应端口，若端口被占用则抛出异常并输出
@@ -69,15 +69,19 @@ public class server {
      * 调用脚本查询文件
      * @param shellDir shell所在路径
      * @param shellName shell名称
-     * @param args shell参数
+     * @param args shell参数 - 最后一个为查询的文件块序列号
      * @return shell返回值
      * @throws IOException 捕获shell输出失败
      */
     public String callShell(String shellDir, String shellName, List<String> args) throws IOException {
+        // 取出块序列号
+        String block_index = args.get(args.size()-1);
+        args.remove(args.size()-1);
+
         List<String> command = new ArrayList<>();
         command.add("./" + shellName);
         command.addAll(args);
-        command.add(this.xml_dir);
+        command.add(this.xml_dir+block_index+".xml");
         System.out.println(command);
         ProcessBuilder pb = new ProcessBuilder(command);
         pb.directory(new File(shellDir));
@@ -117,13 +121,20 @@ public class server {
 //        shell_args[3] = server.xml_dir+"output_0002.xml";
 //
 //        System.out.println(server.callShell(server.shell_dir,server.shell_name,shell_args));
-        final int SERVER_NUM = 6;
-        Thread[] thread_list = new Thread[SERVER_NUM];
-        for(int i=0;i<SERVER_NUM;++i){
-            thread_list[i] = new Thread(new ServerRunner(new server(i),i));
+//        final int SERVER_NUM = 6;
+        Thread[] thread_list = new Thread[Constants.SERVER_NUM];
+        for(int i = 0; i< Constants.SERVER_NUM; ++i){
+            thread_list[i] = new Thread(new ServerRunner(new server(i),i,Thread.currentThread()));
             thread_list[i].start();
         }
-
+        while(true){
+            BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
+            System.out.println("可输入Server的label来停止相应server");
+            int stop_server = Integer.parseInt(console.readLine());
+            if(stop_server>=0&&stop_server<= Constants.SERVER_NUM) {
+                thread_list[stop_server].stop();
+            }
+        }
     }
 }
 
