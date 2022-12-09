@@ -113,15 +113,6 @@ public class server {
         return null;
     }
     public static void main(String []args) throws IOException {
-//        server server = new server(0);
-//        String [] shell_args = new String[4];
-//        shell_args[0] = "Yuval Cassuto";
-//        shell_args[1] = "2019";
-//        shell_args[2] = "2022";
-//        shell_args[3] = server.xml_dir+"output_0002.xml";
-//
-//        System.out.println(server.callShell(server.shell_dir,server.shell_name,shell_args));
-//        final int SERVER_NUM = 6;
         Thread[] thread_list = new Thread[Constants.SERVER_NUM];
         for(int i = 0; i< Constants.SERVER_NUM; ++i){
             thread_list[i] = new Thread(new ServerRunner(new server(i),i,Thread.currentThread()));

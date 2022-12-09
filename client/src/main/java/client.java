@@ -5,7 +5,12 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 /**
  * Client端
@@ -18,7 +23,15 @@ public class client {
     private final Socket[] sockets;
     private final String[] server_list;
     private final int start_port;
+    private Logger logger = Logger.getLogger("client");
     private client(int server_num, int block_num,int start_port){
+        try {
+            FileHandler fileHandler = new FileHandler("log.txt");
+            fileHandler.setFormatter(new SimpleFormatter());
+            logger.addHandler(fileHandler);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         this.server_num = server_num;
         this.block_num = block_num;
         this.start_port = start_port;
@@ -121,9 +134,10 @@ public class client {
         // 发送请求 ----- 采用多线程
         String args = this.list2String(arg_list);
         Thread[] thread_list = new Thread[this.block_num];
+        long start_time = System.currentTimeMillis();
         for(int i = 0; i< this.block_num;++i){
             // 在参数最后增加查询的块号
-            thread_list[i] = new Thread(new CommunicationManager(args+"|"+i,counter,sockets,this.server_list,i));
+            thread_list[i] = new Thread(new CommunicationManager(this.logger,args+"|"+i,counter,sockets,this.server_list,i));
             thread_list[i].start();
         }
         int i=0;
@@ -135,11 +149,16 @@ public class client {
             }
         }
         // 若运行到此处，则ok了（吧?
-        System.out.println("--------------------------------------");
-        System.out.println("查询结果为:"+counter.getResult());
+        if(counter.getCount()==0){
+            logger.info("--------------------------------------" +
+                    "\n查询结果为:"+counter.getResult()+
+                    "\n查询用时" +(System.currentTimeMillis()-(double)start_time)/1000+"s");
+        }
         return true;
     }
     public static void main(String[] args) throws IOException {
+        Logger logger = Logger.getLogger("client");
+
         client c = createClient(Constants.SERVER_NUM,Constants.BLOCK_NUM,1100);
 
         while (true){
@@ -171,6 +190,7 @@ class CommunicationManager implements Runnable{
     private String[] server_list;
     private String request_msg;
     private int block_index;
+    private Logger logger;
     @Override
     public void run() {
         // 取出socket
@@ -182,32 +202,35 @@ class CommunicationManager implements Runnable{
         int try_count=0;
         while (true){
             try {
-                this.sendMessage(socket,this.request_msg);
-                System.out.println("等待"+socket_label+"服务端回应……");
-                String result= this.waitingForRes(socket);
+                // 上锁防止数据混淆
+                synchronized (socket){
+                    this.sendMessage(socket,this.request_msg);
+                    logger.info("等待"+socket_label+"服务端回应……");
+                    String result= this.waitingForRes(socket);
 
-                // 若能运行到此处说明未发生异常
-                System.out.println(socket_label+"返回结果为:"+result);
-                // 修改counter
-                synchronized (this.counter){
-                    this.counter.addResult(Integer.parseInt(result));
-                    this.counter.countDown();
+                    // 若能运行到此处说明未发生异常
+                    logger.info(socket_label+"返回结果为:"+result);
+                    // 修改counter
+                    synchronized (this.counter){
+                        this.counter.addResult(Integer.parseInt(result));
+                        this.counter.countDown();
+                    }
+                    // 退出
+                    break;
                 }
-                // 退出
-                break;
             } catch (IOException e) {
                 // 发生异常，则此时无法跳出循环
                 if(try_count<Constants.REPLICAS){
                     socket = this.sockets[Integer.parseInt(replicas_server_label.get(try_count++))];
                     socket_label = String.valueOf(socket.getPort()-Constants.START_PORT);
-                    System.out.println("等待超时，尝试从"+socket_label+"查询第"+(try_count+1)+"个冗余块……");
+                    logger.warning("等待超时，尝试从"+socket_label+"查询第"+(try_count+1)+"个冗余块……");
 
                 }
                 else{
-                    System.out.println("已有超过"+Constants.REPLICAS+"个服务端宕机，查询失败");
+                    logger.severe("已有超过"+Constants.REPLICAS+"个服务端宕机，查询失败");
                     // 修改counter
                     synchronized (this.counter){
-                        this.counter.countDown();
+                        this.counter.setCount(-1);
                     }
                     break;
                 }
@@ -222,12 +245,13 @@ class CommunicationManager implements Runnable{
      * @param sockets socket表——便于遇到异常时处理
      * @param block_index 当前尝试搜索的文件块号
      */
-    CommunicationManager(String requestMsg,RequestCounter counter,Socket[] sockets,String[] server_list,int block_index){
+    CommunicationManager(Logger logger,String requestMsg,RequestCounter counter,Socket[] sockets,String[] server_list,int block_index){
         this.request_msg = requestMsg;
         this.counter = counter;
         this.sockets = sockets;
         this.distributor = new FileBlockDistributor(server_list);
         this.block_index = block_index;
+        this.logger = logger;
     }
 
     /**
