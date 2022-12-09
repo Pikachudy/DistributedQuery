@@ -1,5 +1,7 @@
 import lombok.Data;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -18,14 +20,38 @@ public class server {
     private final String xml_dir;
     private final int server_label;
     private final int port;
+    private final int select_method;
+    private List<MineMap<String,Integer>> maps;
     private Socket accept;
-    server(int serverLabel){
+    server(int serverLabel,int selectMethod){
         server_label= serverLabel;
         port=serverLabel+1100;
         shell_dir = "/home/ubuntu/Distribution/DistributedQuery/script/src/main/shell";
         shell_name= "select.sh";
         // 监听块名称
         xml_dir = "/home/ubuntu/Distribution/ServerFile0"+server_label+"/output_000";
+        select_method = selectMethod;
+    }
+
+    /**
+     * 如有必要，则建立索引
+     */
+    public void makeMaps() throws ParserConfigurationException, IOException, SAXException {
+        IndexManager manager = new IndexManager();
+        this.maps=new ArrayList<>();
+        for(int i=0;i<Constants.BLOCK_NUM;++i){
+            maps.add(null);
+        }
+        if(this.select_method==2){
+            System.out.println("Server"+this.server_label+"正在为每一文件块分别构建索引……");
+            int count = 0;
+            for(int i=(this.server_label+Constants.BLOCK_NUM-Constants.REPLICAS)%Constants.BLOCK_NUM;count<Constants.REPLICAS;i=((i+1)%Constants.BLOCK_NUM)) {
+                maps.set(i,manager.createIndex("/home/ubuntu/Distribution/ServerFile0" + server_label + "/output_000" + i+".xml"));
+                count++;
+            }
+            maps.set(server_label,manager.createIndex("/home/ubuntu/Distribution/ServerFile0" + server_label + "/output_000" + server_label+".xml"));
+            System.out.println("Server"+this.server_label+"索引建立完毕");
+        }
     }
     /**
      * 监听相应端口，若端口被占用则抛出异常并输出
@@ -64,6 +90,42 @@ public class server {
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(accept.getOutputStream()));
         writer.write(result+'\n');
         writer.flush();
+    }
+
+    /**
+     * 通过查找本地索引来查询
+     * @param args 参数 - 最后一个为查询的文件块序列号
+     * @return 查询结果
+     */
+    public String searchMap(List<String> args){
+        // 取出块序列号
+        String block_index = args.get(args.size()-1);
+        int max_year=2023;
+        int min_year=1900;
+        if(args.size() == 4){
+            // name l_year r_year block_index
+            if("-".equals(args.get(1))){
+                //只有上限值
+                max_year = Integer.parseInt(args.get(2));
+            }
+            else if("-".equals(args.get(2))){
+                //只有下限值
+                min_year = Integer.parseInt(args.get(1));
+            }
+            else{
+                min_year = Integer.parseInt(args.get(1));
+                max_year = Integer.parseInt(args.get(2));
+            }
+        }
+        int count=0;
+        for(int year=min_year+1;year<max_year;year++){
+            count+=this.maps.get(Integer.parseInt(block_index)).get(args.get(0)+"_"+year,0);
+        }
+        if(args.size()==2){
+            // 计算不含有年份的标签内的author 例如<www>
+            count+=this.maps.get(Integer.parseInt(block_index)).get(args.get(0)+"_null",0);
+        }
+        return String.valueOf(count);
     }
     /**
      * 调用脚本查询文件
@@ -113,17 +175,31 @@ public class server {
         return null;
     }
     public static void main(String []args) throws IOException {
+        int select_method = 0;
+        BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
+        while (true){
+            System.out.println("请选择查询方式\n1-脚本查询\n2-使用本地索引文件:");
+            String s = console.readLine();
+            if("1".equals(s)||"2".equals(s)){
+                select_method = Integer.parseInt(s);
+                break;
+            }
+            else{
+                System.out.println("输入非法！");
+            }
+        }
+
         Thread[] thread_list = new Thread[Constants.SERVER_NUM];
         for(int i = 0; i< Constants.SERVER_NUM; ++i){
-            thread_list[i] = new Thread(new ServerRunner(new server(i),i,Thread.currentThread()));
+            thread_list[i] = new Thread(new ServerRunner(new server(i,select_method),i,Thread.currentThread()));
             thread_list[i].start();
         }
         while(true){
-            BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
-            System.out.println("可输入Server的label来停止相应server");
+            console = new BufferedReader(new InputStreamReader(System.in));
             int stop_server = Integer.parseInt(console.readLine());
             if(stop_server>=0&&stop_server<= Constants.SERVER_NUM) {
                 thread_list[stop_server].stop();
+                System.out.println("server_"+stop_server+"已停止");
             }
         }
     }

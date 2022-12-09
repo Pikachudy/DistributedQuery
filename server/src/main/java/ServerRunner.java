@@ -1,5 +1,7 @@
 import lombok.Data;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.List;
 
@@ -25,14 +27,25 @@ public class ServerRunner implements Runnable {
 
     @Override
     public void run() {
-            while (true){
+        try {
+            m_server.makeMaps();
+        } catch (ParserConfigurationException | IOException | SAXException e) {
+            throw new RuntimeException(e);
+        }
+        while (true){
                 if(m_server.startListen()){
                     // 与客户端成功建立socket连接
                     while(true){
                         try {
                             List<String> args = m_server.waitingForRequest();
                             System.out.println(m_server.getServer_label()+"号服务端正在检索:"+args);
-                            String result = m_server.callShell(m_server.getShell_dir(), m_server.getShell_name(),args);
+                            String result =null;
+                            if(m_server.getSelect_method()==1){
+                                result= m_server.callShell(m_server.getShell_dir(), m_server.getShell_name(),args);
+                            }
+                            else{
+                                result = m_server.searchMap(args);
+                            }
                             System.out.println(m_server.getServer_label()+"号服务端检索结果为:"+result);
                             m_server.replyRequest(result);
                         } catch (IOException | NullPointerException e) {

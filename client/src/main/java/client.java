@@ -66,7 +66,7 @@ public class client {
         for(int i=0;i<server_num;++i){
             int port = this.start_port+i;
             sockets[i] = new Socket(InetAddress.getLocalHost().getHostAddress(),port);
-            sockets[i].setSoTimeout(7000);
+            sockets[i].setSoTimeout(8000);
             server_list[i]= String.valueOf(sockets[i].getPort()-this.start_port);
         }
         return sockets;

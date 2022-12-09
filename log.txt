@@ -1,0 +1,140 @@
+Dec 10, 2022 3:11:11 AM CommunicationManager run
+INFO: 等待0服务端回应……
+Dec 10, 2022 3:11:11 AM CommunicationManager run
+INFO: 等待5服务端回应……
+Dec 10, 2022 3:11:11 AM CommunicationManager run
+INFO: 等待4服务端回应……
+Dec 10, 2022 3:11:11 AM CommunicationManager run
+INFO: 等待3服务端回应……
+Dec 10, 2022 3:11:11 AM CommunicationManager run
+INFO: 等待1服务端回应……
+Dec 10, 2022 3:11:11 AM CommunicationManager run
+INFO: 等待2服务端回应……
+Dec 10, 2022 3:11:11 AM CommunicationManager run
+INFO: 0返回结果为:29
+Dec 10, 2022 3:11:11 AM CommunicationManager run
+INFO: 3返回结果为:3
+Dec 10, 2022 3:11:11 AM CommunicationManager run
+INFO: 4返回结果为:56
+Dec 10, 2022 3:11:11 AM CommunicationManager run
+INFO: 5返回结果为:8
+Dec 10, 2022 3:11:11 AM CommunicationManager run
+INFO: 2返回结果为:0
+Dec 10, 2022 3:11:11 AM CommunicationManager run
+INFO: 1返回结果为:33
+Dec 10, 2022 3:11:12 AM client dealRequest
+INFO: --------------------------------------
+查询结果为:129
+查询用时0.536s
+Dec 10, 2022 3:11:29 AM CommunicationManager run
+INFO: 等待0服务端回应……
+Dec 10, 2022 3:11:29 AM CommunicationManager run
+INFO: 等待1服务端回应……
+Dec 10, 2022 3:11:29 AM CommunicationManager run
+INFO: 0返回结果为:24
+Dec 10, 2022 3:11:29 AM CommunicationManager run
+INFO: 1返回结果为:32
+Dec 10, 2022 3:11:29 AM CommunicationManager run
+INFO: 等待2服务端回应……
+Dec 10, 2022 3:11:29 AM CommunicationManager run
+INFO: 等待4服务端回应……
+Dec 10, 2022 3:11:29 AM CommunicationManager run
+INFO: 4返回结果为:40
+Dec 10, 2022 3:11:29 AM CommunicationManager run
+INFO: 等待3服务端回应……
+Dec 10, 2022 3:11:29 AM CommunicationManager run
+INFO: 等待5服务端回应……
+Dec 10, 2022 3:11:29 AM CommunicationManager run
+INFO: 2返回结果为:0
+Dec 10, 2022 3:11:29 AM CommunicationManager run
+INFO: 3返回结果为:2
+Dec 10, 2022 3:11:29 AM CommunicationManager run
+INFO: 5返回结果为:5
+Dec 10, 2022 3:11:30 AM client dealRequest
+INFO: --------------------------------------
+查询结果为:103
+查询用时0.505s
+Dec 10, 2022 3:14:15 AM CommunicationManager run
+INFO: 等待0服务端回应……
+Dec 10, 2022 3:14:15 AM CommunicationManager run
+INFO: 0返回结果为:2
+Dec 10, 2022 3:14:15 AM CommunicationManager run
+INFO: 等待1服务端回应……
+Dec 10, 2022 3:14:15 AM CommunicationManager run
+INFO: 等待2服务端回应……
+Dec 10, 2022 3:14:15 AM CommunicationManager run
+INFO: 1返回结果为:3
+Dec 10, 2022 3:14:15 AM CommunicationManager run
+INFO: 2返回结果为:0
+Dec 10, 2022 3:14:15 AM CommunicationManager run
+INFO: 等待3服务端回应……
+Dec 10, 2022 3:14:15 AM CommunicationManager run
+INFO: 等待4服务端回应……
+Dec 10, 2022 3:14:15 AM CommunicationManager run
+INFO: 等待5服务端回应……
+Dec 10, 2022 3:14:15 AM CommunicationManager run
+INFO: 4返回结果为:2
+Dec 10, 2022 3:14:15 AM CommunicationManager run
+INFO: 3返回结果为:1
+Dec 10, 2022 3:14:15 AM CommunicationManager run
+INFO: 5返回结果为:0
+Dec 10, 2022 3:14:16 AM client dealRequest
+INFO: --------------------------------------
+查询结果为:8
+查询用时0.503s
+Dec 10, 2022 3:14:28 AM CommunicationManager run
+INFO: 等待0服务端回应……
+Dec 10, 2022 3:14:28 AM CommunicationManager run
+INFO: 等待1服务端回应……
+Dec 10, 2022 3:14:28 AM CommunicationManager run
+INFO: 0返回结果为:2
+Dec 10, 2022 3:14:28 AM CommunicationManager run
+INFO: 1返回结果为:3
+Dec 10, 2022 3:14:28 AM CommunicationManager run
+INFO: 等待2服务端回应……
+Dec 10, 2022 3:14:28 AM CommunicationManager run
+INFO: 等待4服务端回应……
+Dec 10, 2022 3:14:28 AM CommunicationManager run
+INFO: 等待5服务端回应……
+Dec 10, 2022 3:14:28 AM CommunicationManager run
+INFO: 2返回结果为:0
+Dec 10, 2022 3:14:28 AM CommunicationManager run
+INFO: 等待3服务端回应……
+Dec 10, 2022 3:14:28 AM CommunicationManager run
+INFO: 5返回结果为:0
+Dec 10, 2022 3:14:28 AM CommunicationManager run
+INFO: 4返回结果为:2
+Dec 10, 2022 3:14:28 AM CommunicationManager run
+INFO: 3返回结果为:0
+Dec 10, 2022 3:14:28 AM client dealRequest
+INFO: --------------------------------------
+查询结果为:7
+查询用时0.503s
+Dec 10, 2022 3:14:34 AM CommunicationManager run
+INFO: 等待0服务端回应……
+Dec 10, 2022 3:14:34 AM CommunicationManager run
+INFO: 等待2服务端回应……
+Dec 10, 2022 3:14:34 AM CommunicationManager run
+INFO: 0返回结果为:2
+Dec 10, 2022 3:14:34 AM CommunicationManager run
+INFO: 等待1服务端回应……
+Dec 10, 2022 3:14:34 AM CommunicationManager run
+INFO: 2返回结果为:0
+Dec 10, 2022 3:14:34 AM CommunicationManager run
+INFO: 1返回结果为:3
+Dec 10, 2022 3:14:34 AM CommunicationManager run
+INFO: 等待3服务端回应……
+Dec 10, 2022 3:14:34 AM CommunicationManager run
+INFO: 等待4服务端回应……
+Dec 10, 2022 3:14:34 AM CommunicationManager run
+INFO: 3返回结果为:1
+Dec 10, 2022 3:14:34 AM CommunicationManager run
+INFO: 等待5服务端回应……
+Dec 10, 2022 3:14:34 AM CommunicationManager run
+INFO: 4返回结果为:2
+Dec 10, 2022 3:14:34 AM CommunicationManager run
+INFO: 5返回结果为:0
+Dec 10, 2022 3:14:34 AM client dealRequest
+INFO: --------------------------------------
+查询结果为:8
+查询用时0.505s
