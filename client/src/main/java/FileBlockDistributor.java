@@ -1,6 +1,8 @@
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 
+import java.io.*;
+import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,28 +67,6 @@ public class FileBlockDistributor {
     public String getServer(String block_key){
         return this.consistentHash.getServer(block_key);
     }
-    /**
-     * 从文件块分配器中查找文件块
-     * @param fileBlock 文件块lable
-     * @return 文件块
-     */
-    public String find(String fileBlock) {
-        // 计算文件块的哈希值
-        long hash = consistentHash.hashFunction.hashString(fileBlock, StandardCharsets.UTF_8).asLong();
-        // 根据哈希值找到离它最近的服务器
-        String server = consistentHash.getServer(fileBlock);
-        // 在服务器和它的冗余服务器上查找文件块
-        List<String> servers = getReplicas(server, Constants.REPLICAS);
-        servers.add(server);
-        for (String s : servers) {
-//            String file = findInServer(s, fileBlock);
-//            if (file != null) {
-//                return file;
-//            }
-        }
-        // 如果找不到文件块，则返回null
-        return null;
-    }
 
     /**
      * 打印文件块最近服务器、冗余服务器信息
@@ -105,8 +85,90 @@ public class FileBlockDistributor {
         }
 
     }
-    // 将文件块存储到服务器上
-    private void store(String server, String fileBlock) {
+
+    /**
+     * 存储文件块至服务器
+     * @param fileBlock 文件名称
+     */
+    private void blockStore(String fileBlock){
+        // 计算文件块的哈希值
+        long hash = consistentHash.hashFunction.hashString(fileBlock, StandardCharsets.UTF_8).asLong();
+        // 找到离它最近的服务器及冗余服务器
+        String server = consistentHash.getServer(fileBlock);
+        // 服务器对应的冗余服务器
+        List<String> servers = getReplicas(server, Constants.REPLICAS);
+        servers.add(server);
+        for(String s : servers){
+            store(s,fileBlock);
+        }
+    }
+
+    /**
+     * 利用作业2，将文件块存至某一服务器
+     * @param server 服务器label
+     * @param fileBlock 文件块名称
+     * @return 是否ok
+     */
+    private boolean store(String server, String fileBlock) {
+        try {
+            Socket s = new Socket();
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
+            String file_name = fileBlock;
+            // 发起请求
+            writer.write("put_block\n");
+            writer.flush();
+            // 等待响应
+            String msg = reader.readLine();
+            if(!msg.equals("request_ok")){
+                System.out.println("块上传请求未被正确响应，传输中止");
+                return false;
+            }
+            // 发送文件名
+            writer.write(file_name+'\n');
+            writer.flush();
+            // 等待响应
+            msg = reader.readLine();
+            if(!msg.equals("name_ok")){
+                System.out.println("块文件名未被正确响应，传输中止");
+                return false;
+            }
+            // 从文件中读取
+            int block_size =1024*1024*768;
+            String file_path = "/home/ubuntu/Distribution/XmlBlocks/";
+            byte [] block; // 缓冲区
+            try{
+                // 读取本地文件
+                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file_path+"\\"+file_name));
+                block = new byte[block_size];
+                int len=-1;
+                while ((len = bis.read(block))!=-1){
+                }
+
+            } catch (FileNotFoundException e) {
+                System.out.println("找不到指定文件，请检查文件路径及文件名称");
+                return false;
+            } catch (IOException e) {
+                System.out.println("本地文件读取失败！");
+                return false;
+            }
+            // 准备文件传输
+            BufferedOutputStream bos = new BufferedOutputStream(s.getOutputStream());
+            bos.write(block);
+            bos.flush();
+            // 等待响应
+            msg = reader.readLine();
+            if(!msg.equals("block_ok")){
+                System.out.println("块文件上传失败，传输中止");
+                return false;
+            }
+        } catch (IOException e) {
+            //throw new RuntimeException(e);
+            System.out.println(e);
+            System.out.println("上传文件块时创建IO流失败");
+            return false;
+        }
+        return true;
     }
 }
 
